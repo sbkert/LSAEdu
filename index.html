@@ -1,78 +1,109 @@
-Davranışsal Gözlem Verileri İçin GSEQ ve SDIS Temelli Stratejik Analiz Planı
-
-1. Giriş: Davranışsal Mikroanaliz ve Senkronizasyonun Stratejik Önemi
-
-Davranış bilimlerinde metodolojik yaklaşım, genellikle "küresel değerlendirme" (global approach) ile "mikro-analitik yaklaşım" arasında bir seçim gerektirir. Küresel yaklaşım, davranışı geniş zaman dilimlerinde "var/yok" veya toplam sıklık üzerinden ölçeklendirirken; mikro-analitik yaklaşım, davranışların başlangıç ve bitiş anlarını saniyelik hassasiyetle kaydederek etkileşimin zamansal dokusunu inceler. Ebeveyn-çocuk senkronizasyonu (Ausherman, 2014) ve hibrit zeka (Nguyen ve ark., 2024) gibi alanlarda asıl sorun, bu yapıların teoride çok yaygın olmasına rağmen, davranış düzeyinde standart ve geçerli bir ölçümleme (operationalization) yönteminin eksikliğidir. Mikro-analitik veri toplama, değişkenler arasındaki karşılıklı ve döngüsel (recursive) etkileşimleri ortaya çıkarma kapasitesine sahiptir. Feldman’ın (2012) biyo-davranışsal senkronizasyon modelinde vurguladığı üzere, sosyal davranışlar aslında fizyolojik süreçlerin senkronize olmasını sağlayan temel mekanizmadır; bu nedenle etkileşimin anlık akışını analiz etmek, sadece bir teknik tercih değil, teorik modelleri doğrulamak için stratejik bir zorunluluktur.
-
-Bu metodolojik derinliğin temeli, verilerin sistematik bir şekilde kodlanmasıyla atılır; bu süreç bir sonraki bölümde ele alınmaktadır.
-
-2. Veri Toplama ve Kodlama Protokolleri: Mangold INTERACT Entegrasyonu
-
-Veri toplama aşamasında, etkileşimlerin video kaydı (laboratuvar ortamı veya dijital platformlar) birincil veri kaynağıdır. Kodlama süreci, saniye bazlı veya olay temelli "anlam birimleri" (unit of meaning) üzerinden yapılandırılır. Mangold INTERACT yazılımı, çoklu video desteği ve senkronize oynatma özellikleri sayesinde araştırmacıya yüksek hassasiyetli bir medya işleme avantajı sunar. Metodolojik titizliğin bir göstergesi olarak, gözlemciler arası güvenirlik (inter-rater reliability) analizlerinde Cohen’s Kappa değerinin 0.75 üzerinde (mükemmel seviye) olması hedeflenmelidir. Mangold/Bakeman prosedürleri çerçevesinde, verinin doğasına göre olay-temelli (event-based) veya zaman-temelli (time-based) Kappa algoritmaları seçilmelidir. INTERACT’tan gerçekleştirilen "Direct Data Export", kodlanmış verilerin manuel hata payı olmadan doğrudan SDIS formatına aktarılmasını sağlayarak iş akış verimliliğini maksimize eder.
-
-Kodlama Türü	Uygulama Alanı	Stratejik Çıktı
-Olay (Event)	Çevrimiçi Tartışma Grupları (Jeong)	Eleştirel düşünme olayları arasındaki geçiş olasılıkları.
-Durum (State)	Ebeveyn-Çocuk Etkileşimi (Ausherman)	Senkron ve asenkron segmentlerin süre ve frekans dağılımı.
-Zamanlanmış Olay (Timed-event)	AI Destekli Akademik Yazma (Nguyen)	Yazma stratejilerinin (SRL) zamansal akışı ve AI ile etkileşim süresi.
-
-Ham kodlanmış veriler toplandıktan sonra, analiz motorunun anlayabileceği standart dile dönüştürülmelidir.
-
-3. SDIS (Sequential Data Interchange Standard) Dil Yapısı ve Dönüşüm
-
-SDIS (Sequential Data Interchange Standard), sıralı gözlemsel verileri tanımlamak için kullanılan evrensel bir dildir. Gözlem yazılımlarından (INTERACT, The Observer vb.) elde edilen verilerin analiz edilebilmesi için SDIS derleyicisi aracılığıyla MDS (Modified SDS) dosyalarına dönüştürülmesi şarttır. Teknik bir uyarı olarak; GSEQ 5 sürümünde kullanılan MDS formatı önceki sürümlerle uyumlu değildir; bu nedenle eski SDS dosyalarının yeniden derlenmesi gerekmektedir. Veri kaynağına bağlı olarak kullanılan standalone yardımcı programlar dönüşümde kritik rol oynar: ActSds (INTERACT verileri için), ObsTxtSds (The Observer Sürüm 6 ve sonrası için) ve OdfSds (The Observer Sürüm 5 ve öncesi için).
-
-SDIS Dosya Yapısının Temel Bileşenleri:
-
-* Kod Tanımları: Analiz edilecek tüm davranış kodlarının ve etiketlerinin hiyerarşik tanımı.
-* Veri Tipi: Verinin olay (event), durum (state), zamanlanmış olay (timed-event) veya çoklu-olay (multievent) olup olmadığının belirtilmesi.
-* Oturum Verileri: Her bir gözlem seansına ait ham kod dizileri ve zaman damgalarının standart yazımı.
-
-Derlenen SDIS dosyaları, veriler üzerinde mantıksal manipülasyonlar yapılmasına olanak tanıyan GSEQ platformuna giriş sağlar.
-
-4. GSEQ Yapılandırması ve Veri Modifikasyon Prosedürleri
-
-GSEQ (Generalized Sequential Querier), sıralı verileri analiz etmek için kullanılan en güçlü araçtır. Yazılımın veri modifikasyon kapasitesi, ham veriyi stratejik bir yapıya kavuşturur. Özellikle "Lumping" (birleştirme) ve "Recoding" (yeniden kodlama) işlemleri, nadir görülen davranış kodlarını birleştirerek Jeong (2003) tarafından vurgulanan "küçük hücre frekansları" riskini ve Tip I hata olasılığını minimize eder.
-
-GSEQ Modifikasyon Araçları GSEQ, karmaşık etkileşim kalıplarını basitleştirmek için mantıksal operatörler (VE, VEYA, DEĞİL) sunar. Özellikle "Window" komutu, belirli bir davranışın başlangıcı (onset) veya bitişi (offset) etrafında zamansal pencereler tanımlayarak zaman-penceresi sıralı analizleri (time-window sequential analysis) yapılmasını sağlar. Bu, örneğin bir AI uyarısından sonraki 5 saniye içinde gerçekleşen kullanıcı tepkilerini izole etmek için stratejik bir öneme sahiptir.
-
-Veriler yapılandırıldıktan sonra, asıl istatistiksel çıkarımların yapılacağı analiz aşamasına geçilir.
-
-5. Gecikmeli Sıralı Analiz (Lag Sequential Analysis - LSA) ve İstatistiksel Göstergeler
-
-LSA metodolojisi, bir "verili" (given) davranıştan sonra bir "hedef" (target) davranışın gelme olasılığını ölçer. Lag 1 doğrudan ardışık eylemleri (örneğin: PROMPT \to RE_GAI) incelerken, Lag 2 analizi araya giren diğer eylemlere rağmen devam eden dolaylı etkileşim kalıplarını (örneğin: Ebeveyn Kolaylaştırma \to X \to İş Birliği) ortaya çıkarır. Analiz planında Nguyen ve ark. (2024) tarafından tanımlanan iki temel küme göz önünde bulundurulmalıdır: Küme 1 (Exploratory - Araştırmacı) ve Küme 2 (Efficiency-driven - Verimlilik Odaklı).
-
-İstatistiksel Çıktıların Değerlendirilmesi:
-
-* Transitional Probabilities (Geçiş Olasılıkları): Davranış dizisinin gerçekleşme olasılığı (0.00 - 1.00).
-* Adjusted Residuals & Z-Scores: Gözlenen frekansın beklenen frekanstan anlamlı farkı (z \geq \pm1.96 ise p < .05 düzeyinde anlamlıdır).
-* Yule’s Q: Etkileşimin gücünü belirleyen etki büyüklüğü (Q \geq 0.30 ise güçlü ilişki).
-
-Geçiş Matrisi Örneği (Sıralı Davranış Dinamikleri):
-
-Verili Davranış (Given)	Hedef Davranış (Target)	Lag (Gecikme)	Z-Skoru	Yule’s Q
-Parent Facilitation	Collaboration	Lag 1-2	> 1.96	> 0.30
-GenAI Prompt	Review GenAI Content	Lag 1	9.74	0.82
-Parent Suppress	Separate Attention	Lag 2	> 1.96	> 0.30
-
-GSEQ ile elde edilen bu sofistike bulgular, daha geniş çaplı analizler için diğer paket programlara aktarılmalıdır.
-
-6. Veri Dışa Aktarımı ve İleri Analiz Yazılımlarına Transfer (SPSS, R, Excel)
-
-GSEQ sonuçları, sekme ile ayrılmış (tab-delimited) metin dosyaları olarak dışa aktarılır. Bu süreç, GSEQ'den elde edilen verilerin SPSS veya R gibi platformlarda grup karşılaştırmaları (homogeneity tests) ve zaman içindeki durağanlık (stationarity) analizlerine tabi tutulmasını sağlar. Özellikle R'daki "LagSequential" paketi, hem parametrik hem de randomizasyon testlerini desteklemesi bakımından Ausherman’ın çalışmasındaki gibi küçük örneklemli (4 diyad) çalışmalar için hayati bir avantaj sunar.
-
-Veri Transferinde 3 Kritik Adım:
-
-1. Format Uyumluluğu: Çıktıların hedef yazılıma uygun yapılandırıldığından emin olunması.
-2. Veri Havuzlama (Pooling): Analizlerin seans bazlı mı yoksa tüm seansların birleştirilerek (pooled) mi aktarılacağının kararlaştırılması.
-3. İleri İstatistiksel Doğrulama: R entegrasyonu ile davranış kalıplarının gruplar arası tutarlılığının (homojenlik) test edilmesi.
-
-7. Sonuç: Metodolojik Entegrasyon ve Gelecek Projeksiyonu
-
-Bu uygulama planı, davranış bilimlerinde teorik olarak var olan ancak ölçümü zor olan "Hibrit Zeka" (Human-AI Shared Regulation - HASRL) ve "Biyo-davranışsal Senkronizasyon" modellerini standardize bir metodolojiye oturtmaktadır. "So what?" (Öyleyse ne?) sorusuna verilecek yanıt nettir: Bu metodoloji, etkileşimin gizli zamansal yapısını görünür kılarak, sadece davranışın sıklığını değil, tarafların birbirine olan "zamanındaki" tepkilerini kanıta dayalı olarak doğrular.
-
-Araştırmacılar İçin 3 Anahtar Başarı Faktörü
-
-1. Metodolojik Titizlik: Gözlemciler arası güvenirliğin (Cohen’s Kappa) mükemmel seviyede (> 0.75) tutulması.
-2. Analitik Eşikler: Anlamlılık testlerinde z \geq \pm1.96 ve etki büyüklüğünde Q \geq 0.30 kriterlerine sadık kalınması.
-3. Dinamik Yaklaşım: Sabit frekanslar yerine, davranışların birbirini nasıl tetiklediğine (geçiş olasılıkları) odaklanarak etkileşimin gerçek doğasının yansıtılması.
-
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Edu-LSA Video Davranış Analizi Platformu</title>
+<style>
+:root{--bg:#f5f7fb;--card:#fff;--ink:#172033;--muted:#667085;--pri:#315efb;--ok:#14a35a;--bad:#d92d20;--warn:#f79009;--line:#e4e7ec}
+*{box-sizing:border-box} body{margin:0;font-family:Arial,Helvetica,sans-serif;background:var(--bg);color:var(--ink)}
+header{padding:18px 24px;background:linear-gradient(120deg,#172033,#315efb);color:white;position:sticky;top:0;z-index:3;box-shadow:0 3px 20px #0002}
+header h1{margin:0;font-size:22px} header p{margin:6px 0 0;font-size:13px;opacity:.9}
+.container{display:grid;grid-template-columns:420px 1fr;gap:16px;padding:16px;max-width:1500px;margin:auto}
+.card{background:var(--card);border:1px solid var(--line);border-radius:16px;box-shadow:0 8px 28px #10182812;padding:16px;margin-bottom:16px}
+.card h2{font-size:17px;margin:0 0 12px}.card h3{font-size:14px;margin:14px 0 8px;color:#344054}
+label{font-size:12px;font-weight:700;color:#344054;display:block;margin:8px 0 5px} input,select,textarea{width:100%;border:1px solid #d0d5dd;border-radius:10px;padding:10px;font-size:13px;background:white} textarea{min-height:92px;resize:vertical}
+button{border:0;border-radius:10px;padding:10px 12px;background:var(--pri);color:#fff;font-weight:700;cursor:pointer;margin:4px 3px 4px 0} button.secondary{background:#eef2ff;color:#263b8f} button.ghost{background:#f2f4f7;color:#344054} button.warn{background:var(--warn)} button.bad{background:var(--bad)} button.ok{background:var(--ok)}
+video{width:100%;border-radius:14px;background:#111;max-height:310px}.grid2{display:grid;grid-template-columns:1fr 1fr;gap:10px}.grid3{display:grid;grid-template-columns:repeat(3,1fr);gap:10px}.small{font-size:12px;color:var(--muted);line-height:1.45}.pill{display:inline-block;padding:3px 8px;border-radius:999px;background:#eef2ff;color:#263b8f;font-size:12px;margin:2px}.kbd{font-family:monospace;background:#f2f4f7;border:1px solid #d0d5dd;border-radius:6px;padding:1px 5px}
+.codeBtns{display:grid;grid-template-columns:1fr 1fr;gap:6px}.codeBtns button{text-align:left;font-size:12px;padding:8px 10px;white-space:normal}.t{border-collapse:collapse;width:100%;font-size:12px}.t th,.t td{border:1px solid #e4e7ec;padding:7px;text-align:left;vertical-align:top}.t th{background:#f9fafb;position:sticky;top:0}.tableWrap{max-height:360px;overflow:auto;border:1px solid #e4e7ec;border-radius:12px}.metric{background:#f9fafb;border:1px solid #e4e7ec;border-radius:14px;padding:12px}.metric b{font-size:21px;display:block} .sig{color:#027a48;font-weight:700}.neg{color:#b42318;font-weight:700}.tabs{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:12px}.tabs button{background:#f2f4f7;color:#344054}.tabs button.active{background:var(--pri);color:white}
+#network,#timeline{width:100%;height:420px;border:1px solid #e4e7ec;border-radius:14px;background:#fff} #timeline{height:160px}.legend{display:flex;gap:8px;flex-wrap:wrap;margin-top:8px}.dot{width:10px;height:10px;border-radius:50%;display:inline-block;margin-right:4px}.footerNote{padding:12px 16px;background:#fff8e6;border:1px solid #fedf89;border-radius:12px;color:#7a4d00;font-size:12px;line-height:1.45}
+@media(max-width:1000px){.container{grid-template-columns:1fr}.grid2,.grid3{grid-template-columns:1fr}}
+</style>
+</head>
+<body>
+<header><h1>Edu-LSA Video Davranış Analizi Platformu</h1><p>Video kodlama, davranış dizisi oluşturma, Lag Sequential Analysis, geçiş matrisi, z-skoru, Yule's Q, ağ grafiği ve indirilebilir rapor.</p></header>
+<div class="container">
+<aside>
+  <div class="card"><h2>1) Video ve Oturum</h2>
+    <input type="file" id="videoFile" accept="video/*" />
+    <video id="video" controls></video>
+    <div class="grid2"><div><label>Oturum/Katılımcı</label><input id="session" value="S1" /></div><div><label>Grup/Etkinlik</label><input id="group" value="Genel" /></div></div>
+    <p class="small">Klavye ile hızlı kodlama: videoyu oynatırken ilgili davranış tuşuna basın. Zaman damgası otomatik alınır.</p>
+  </div>
+  <div class="card"><h2>2) Davranış Kodları</h2>
+    <div class="codeBtns" id="codeButtons"></div>
+    <button class="secondary" onclick="openCodeEditor()">Kod Şemasını Düzenle</button>
+    <button class="ghost" onclick="undoLast()">Son Kodu Sil</button>
+    <div id="codeEditor" style="display:none"><label>Kod şeması JSON</label><textarea id="codeJson"></textarea><button onclick="saveCodes()">Kaydet</button></div>
+  </div>
+  <div class="card"><h2>3) Kod Ekle / Toplu Veri</h2>
+    <div class="grid3"><div><label>Başlangıç sn</label><input id="start" type="number" step="0.1"></div><div><label>Bitiş sn</label><input id="end" type="number" step="0.1"></div><div><label>Kod</label><select id="manualCode"></select></div></div>
+    <label>Not</label><input id="note" placeholder="örn. öğretmen soru sordu" />
+    <button onclick="addManual()">Manuel Kod Ekle</button>
+    <label>CSV içe aktar: start,end,code,actor,note</label><textarea id="csvIn" placeholder="0,3,TQ,Teacher,Öğretmen soru sordu"></textarea>
+    <button class="secondary" onclick="importCSV()">CSV İçe Aktar</button>
+  </div>
+  <div class="card"><h2>4) Basit Otomatik Etiketleme</h2>
+    <p class="small">Bu prototip tarayıcı içinde transkript/araştırmacı notundan anahtar sözcük temelli ön kodlama yapar. Gerçek video-görüntü tanıma için sunucu tarafında güvenli bir yapay zekâ API bağlantısı gerekir.</p>
+    <textarea id="transcript" placeholder="00:03 öğretmen soru soruyor\n00:08 öğrenci cevap veriyor\n00:15 öğrenci içeriğe bakıyor"></textarea>
+    <button class="ok" onclick="autoTag()">Transkriptten Ön Kodla</button>
+  </div>
+</aside>
+<main>
+  <div class="card"><h2>Analiz Ayarları</h2>
+    <div class="grid3"><div><label>Lag</label><select id="lag"><option value="1">Lag 1</option><option value="2">Lag 2</option></select></div><div><label>Anlamlılık eşiği</label><input id="zthr" type="number" step="0.01" value="1.96"></div><div><label>Yule's Q güçlü ilişki eşiği</label><input id="qthr" type="number" step="0.01" value="0.30"></div></div>
+    <button onclick="runAnalysis()">LSA Analizini Çalıştır</button><button class="secondary" onclick="loadDemo()">Demo Veri Yükle</button><button class="bad" onclick="clearAll()">Temizle</button>
+  </div>
+  <div class="grid3" id="metrics"></div>
+  <div class="card"><div class="tabs"><button class="active" onclick="showTab('seq',this)">Kod Dizisi</button><button onclick="showTab('freq',this)">Frekans</button><button onclick="showTab('matrix',this)">Matrisler</button><button onclick="showTab('graph',this)">Grafikler</button><button onclick="showTab('download',this)">İndir</button></div>
+    <section id="tab-seq"><div class="tableWrap"><table class="t" id="seqTable"></table></div></section>
+    <section id="tab-freq" style="display:none"><div class="tableWrap"><table class="t" id="freqTable"></table></div></section>
+    <section id="tab-matrix" style="display:none"><h3>Geçiş / Olasılık / Z / Yule's Q Matrisleri</h3><div id="matrices"></div></section>
+    <section id="tab-graph" style="display:none"><h3>Anlamlı Davranış Geçiş Ağı</h3><canvas id="network"></canvas><div class="legend" id="legend"></div><h3>Zaman Çizelgesi</h3><canvas id="timeline"></canvas></section>
+    <section id="tab-download" style="display:none"><button onclick="downloadCSV()">Kodlanmış Veri CSV</button><button onclick="downloadJSON()">Analiz JSON</button><button onclick="downloadSDIS()">SDIS Benzeri TXT</button><button onclick="downloadReport()">HTML Rapor</button><div class="footerNote">Not: Bu HTML, araştırma amaçlı çalışan bir prototiptir. Otomatik video davranış tanıma için kamera açısı, ses ayrıştırma, yüz/konuşmacı tanıma ve etik izinler dikkate alınarak sunucu taraflı yapay zekâ modülü eklenmelidir.</div></section>
+  </div>
+</main>
+</div>
+<script>
+let codes=[
+ {code:'TG',actor:'Teacher',label:'Öğretmen Rehberlik',key:'1',color:'#2f80ed',keywords:['rehber','yönlendir','anlat','göster','devam']},
+ {code:'TC',actor:'Teacher',label:'Öğretmen Hata Düzeltme',key:'2',color:'#9b51e0',keywords:['hata','yanlış','düzelt']},
+ {code:'TQ',actor:'Teacher',label:'Öğretmen Soru',key:'3',color:'#f2994a',keywords:['soru','neden','nasıl','ne düşün']},
+ {code:'SA',actor:'Student',label:'Öğrenci İçerik/Materyal',key:'4',color:'#27ae60',keywords:['içerik','video','ekran','materyal','bakıyor','izliyor','okuyor']},
+ {code:'SI',actor:'Student',label:'Öğrenci Fikir Paylaşımı',key:'5',color:'#eb5757',keywords:['cevap','fikir','paylaş','açıkla','söylüyor']},
+ {code:'SP',actor:'Student',label:'Öğrenci Problem Çözme',key:'6',color:'#00a6a6',keywords:['çöz','problem','deniyor','algoritma','buluyor']},
+ {code:'SS',actor:'Student',label:'Öğrenci-Öğrenci Etkileşimi',key:'7',color:'#6fcf97',keywords:['arkadaş','öğrenci öğrenci','peer','birlikte','tartış']},
+ {code:'SC',actor:'Student',label:'Öğrenci-İçerik Etkileşimi',key:'8',color:'#56ccf2',keywords:['tablet','kitap','slayt','kod','etkinlik']},
+ {code:'OFF',actor:'Student',label:'Görev Dışı/Pasif',key:'9',color:'#828282',keywords:['pasif','bekliyor','dikkati dağıldı','görev dışı']}
+];
+let events=[], analysis=null;
+const $=id=>document.getElementById(id);
+function init(){renderCodeButtons();$('videoFile').onchange=e=>{let f=e.target.files[0]; if(f) $('video').src=URL.createObjectURL(f)}; document.addEventListener('keydown',e=>{if(document.activeElement.tagName==='INPUT'||document.activeElement.tagName==='TEXTAREA')return; let c=codes.find(x=>x.key===e.key); if(c) addEvent(c.code,$('video').currentTime,null,'Klavye kodlama')}); renderTables();}
+function renderCodeButtons(){let box=$('codeButtons'), sel=$('manualCode'); box.innerHTML=''; sel.innerHTML=''; codes.forEach(c=>{let b=document.createElement('button'); b.className='secondary'; b.innerHTML=`<span class="kbd">${c.key}</span> <b>${c.code}</b><br>${c.label}`; b.onclick=()=>addEvent(c.code,$('video').currentTime,null,'Buton kodlama'); box.appendChild(b); let o=document.createElement('option'); o.value=c.code;o.textContent=`${c.code} - ${c.label}`;sel.appendChild(o)}); $('codeJson').value=JSON.stringify(codes,null,2)}
+function openCodeEditor(){let d=$('codeEditor'); d.style.display=d.style.display==='none'?'block':'none'}
+function saveCodes(){try{codes=JSON.parse($('codeJson').value); renderCodeButtons(); renderTables();}catch(e){alert('JSON hatası: '+e.message)}}
+function addEvent(code,start,end,note){let c=codes.find(x=>x.code===code)||{}; events.push({session:$('session').value,group:$('group').value,start:+(start||0).toFixed(2),end:end?+end.toFixed(2):'',code,actor:c.actor||'',label:c.label||'',note:note||''}); events.sort((a,b)=>a.start-b.start); renderTables();}
+function addManual(){addEvent($('manualCode').value,parseFloat($('start').value||$('video').currentTime||0),$('end').value?parseFloat($('end').value):null,$('note').value)}
+function undoLast(){events.pop();renderTables()} function clearAll(){if(confirm('Tüm kodlar silinsin mi?')){events=[];analysis=null;renderTables();$('metrics').innerHTML='';$('matrices').innerHTML=''}}
+function importCSV(){let rows=$('csvIn').value.trim().split(/\n+/); rows.forEach(r=>{let [start,end,code,actor,note]=r.split(','); if(code) {let c=codes.find(x=>x.code.trim()===code.trim())||{}; events.push({session:$('session').value,group:$('group').value,start:parseFloat(start)||0,end:end?parseFloat(end):'',code:code.trim(),actor:(actor||c.actor||'').trim(),label:c.label||'',note:(note||'').trim()})}}); events.sort((a,b)=>a.start-b.start); renderTables()}
+function parseTime(s){let m=s.match(/(\d{1,2}):(\d{2})(?::(\d{2}))?/); if(!m)return null; return m[3]?+m[1]*3600+ +m[2]*60+ +m[3]:+m[1]*60+ +m[2]}
+function autoTag(){let lines=$('transcript').value.split(/\n+/); lines.forEach((line,i)=>{let low=line.toLowerCase(); let t=parseTime(line); if(t===null)t=i*5; let best=null,score=0; codes.forEach(c=>{let s=c.keywords.filter(k=>low.includes(k)).length; if(s>score){score=s;best=c}}); if(best)addEvent(best.code,t,null,'Otomatik ön kod: '+line)});}
+function renderTables(){let st='<tr><th>#</th><th>Zaman</th><th>Kod</th><th>Aktör</th><th>Etiket</th><th>Not</th></tr>'; events.forEach((e,i)=>st+=`<tr><td>${i+1}</td><td>${e.start}${e.end!==''?'–'+e.end:''}</td><td><b>${e.code}</b></td><td>${e.actor}</td><td>${e.label}</td><td>${e.note||''}</td></tr>`); $('seqTable').innerHTML=st; let counts={}; events.forEach(e=>counts[e.code]=(counts[e.code]||0)+1); let ft='<tr><th>Kod</th><th>Etiket</th><th>Frekans</th><th>%</th></tr>'; codes.forEach(c=>{let n=counts[c.code]||0; ft+=`<tr><td>${c.code}</td><td>${c.label}</td><td>${n}</td><td>${events.length?(100*n/events.length).toFixed(1):0}</td></tr>`}); $('freqTable').innerHTML=ft;}
+function runAnalysis(){let lag=parseInt($('lag').value), zthr=parseFloat($('zthr').value), qthr=parseFloat($('qthr').value); let seq=events.map(e=>e.code); let labels=codes.map(c=>c.code); let N=labels.length; let idx=Object.fromEntries(labels.map((c,i)=>[c,i])); let trans=Array.from({length:N},()=>Array(N).fill(0)); for(let i=0;i<seq.length-lag;i++){if(idx[seq[i]]!==undefined&&idx[seq[i+lag]]!==undefined)trans[idx[seq[i]]][idx[seq[i+lag]]]++} let total=trans.flat().reduce((a,b)=>a+b,0); let row=trans.map(r=>r.reduce((a,b)=>a+b,0)), col=labels.map((_,j)=>trans.reduce((a,r)=>a+r[j],0)); let prob=trans.map((r,i)=>r.map(v=>row[i]?v/row[i]:0)); let z=Array.from({length:N},()=>Array(N).fill(0)), q=Array.from({length:N},()=>Array(N).fill(0)), sig=[]; for(let i=0;i<N;i++)for(let j=0;j<N;j++){let exp=row[i]*col[j]/(total||1); let denom=Math.sqrt(exp*(1-row[i]/(total||1))*(1-col[j]/(total||1))); z[i][j]=denom?((trans[i][j]-exp)/denom):0; let a=trans[i][j], b=row[i]-a, c=col[j]-a, d=total-a-b-c; q[i][j]=((a*d)-(b*c))/(((a*d)+(b*c))||1); if(z[i][j]>=zthr) sig.push({from:labels[i],to:labels[j],freq:a,prob:prob[i][j],z:z[i][j],q:q[i][j],strong:q[i][j]>=qthr})}
+ analysis={labels,trans,prob,z,q,sig,total,lag,zthr,qthr,events:[...events]}; renderAnalysis();}
+function renderAnalysis(){if(!analysis)return; $('metrics').innerHTML=`<div class="metric"><span>Toplam Kod</span><b>${events.length}</b></div><div class="metric"><span>Toplam Geçiş</span><b>${analysis.total}</b></div><div class="metric"><span>Anlamlı Örüntü</span><b>${analysis.sig.length}</b></div>`; let names={trans:'Geçiş Frekansı',prob:'Koşullu Olasılık',z:'Adjusted Residual / Z',q:"Yule's Q"}; $('matrices').innerHTML=Object.keys(names).map(k=>matrixHTML(names[k],analysis[k],k)).join(''); drawNetwork(); drawTimeline();}
+function matrixHTML(title,m,type){let h=`<h3>${title}</h3><div class="tableWrap"><table class="t"><tr><th>Given → Target</th>${analysis.labels.map(x=>'<th>'+x+'</th>').join('')}</tr>`; m.forEach((r,i)=>{h+=`<tr><th>${analysis.labels[i]}</th>`+r.map(v=>`<td class="${type==='z'&&v>=analysis.zthr?'sig':''}">${type==='trans'?v:v.toFixed(2)}</td>`).join('')+'</tr>'}); return h+'</table></div>'}
+function showTab(id,btn){document.querySelectorAll('main section').forEach(s=>s.style.display='none');$('tab-'+id).style.display='block';document.querySelectorAll('.tabs button').forEach(b=>b.classList.remove('active'));btn.classList.add('active'); if(id==='graph'){drawNetwork();drawTimeline()}}
+function drawNetwork(){let can=$('network'),ctx=can.getContext('2d'),w=can.width=can.clientWidth*devicePixelRatio,h=can.height=can.clientHeight*devicePixelRatio;ctx.scale(devicePixelRatio,devicePixelRatio);ctx.clearRect(0,0,w,h); if(!analysis)return; let W=can.clientWidth,H=can.clientHeight, labs=analysis.labels, R=Math.min(W,H)/2-70, cx=W/2, cy=H/2; let pos={}; labs.forEach((l,i)=>{let a=2*Math.PI*i/labs.length-Math.PI/2;pos[l]={x:cx+R*Math.cos(a),y:cy+R*Math.sin(a)}}); analysis.sig.forEach(e=>{let p=pos[e.from],q=pos[e.to]; ctx.strokeStyle=e.strong?'#14a35a':'#315efb'; ctx.lineWidth=Math.max(1,Math.min(8,e.z/2)); ctx.beginPath(); ctx.moveTo(p.x,p.y); ctx.lineTo(q.x,q.y); ctx.stroke(); let mx=(p.x+q.x)/2,my=(p.y+q.y)/2; ctx.fillStyle='#111'; ctx.font='11px Arial'; ctx.fillText(e.z.toFixed(2),mx,my); let ang=Math.atan2(q.y-p.y,q.x-p.x); ctx.beginPath(); ctx.moveTo(q.x-18*Math.cos(ang),q.y-18*Math.sin(ang)); ctx.lineTo(q.x-28*Math.cos(ang-0.25),q.y-28*Math.sin(ang-0.25)); ctx.lineTo(q.x-28*Math.cos(ang+0.25),q.y-28*Math.sin(ang+0.25)); ctx.fillStyle=e.strong?'#14a35a':'#315efb'; ctx.fill();}); labs.forEach(l=>{let p=pos[l],c=codes.find(x=>x.code===l); ctx.fillStyle=c?c.color:'#999'; ctx.beginPath(); ctx.arc(p.x,p.y,22,0,7);ctx.fill();ctx.fillStyle='white';ctx.font='bold 12px Arial';ctx.textAlign='center';ctx.fillText(l,p.x,p.y+4)}); $('legend').innerHTML=codes.map(c=>`<span><i class="dot" style="background:${c.color}"></i>${c.code}: ${c.label}</span>`).join('')}
+function drawTimeline(){let can=$('timeline'),ctx=can.getContext('2d'),w=can.width=can.clientWidth*devicePixelRatio,h=can.height=can.clientHeight*devicePixelRatio;ctx.scale(devicePixelRatio,devicePixelRatio);ctx.clearRect(0,0,w,h); if(!events.length)return; let W=can.clientWidth,H=can.clientHeight,max=Math.max(...events.map(e=>e.start),$('video').duration||0,1); ctx.strokeStyle='#d0d5dd';ctx.beginPath();ctx.moveTo(30,H-30);ctx.lineTo(W-20,H-30);ctx.stroke(); events.forEach(e=>{let x=30+(W-60)*e.start/max; let c=codes.find(k=>k.code===e.code); ctx.fillStyle=c?c.color:'#999';ctx.beginPath();ctx.arc(x,H-30,6,0,7);ctx.fill();ctx.save();ctx.translate(x,H-42);ctx.rotate(-0.8);ctx.fillStyle='#344054';ctx.font='11px Arial';ctx.fillText(e.code,0,0);ctx.restore();})}
+function toCSV(rows){return rows.map(r=>r.map(x=>'"'+String(x??'').replace(/"/g,'""')+'"').join(',')).join('\n')}
+function download(name,text,type='text/plain'){let a=document.createElement('a');a.href=URL.createObjectURL(new Blob([text],{type}));a.download=name;a.click()}
+function downloadCSV(){download('lsa_kodlanmis_veri.csv',toCSV([['session','group','start','end','code','actor','label','note'],...events.map(e=>[e.session,e.group,e.start,e.end,e.code,e.actor,e.label,e.note])]),'text/csv')}
+function downloadJSON(){download('lsa_analiz.json',JSON.stringify(analysis||{},null,2),'application/json')}
+function downloadSDIS(){let txt='Codes: '+codes.map(c=>c.code+'='+c.label).join('; ')+'\nDataType: event\nSession '+($('session').value||'S1')+':\n'+events.map(e=>`${e.start}\t${e.code}\t${e.note||''}`).join('\n');download('lsa_sdis_benzeri.txt',txt)}
+function downloadReport(){let html=`<html><meta charset="utf-8"><body><h1>LSA Raporu</h1><p>Toplam kod: ${events.length}; anlamlı örüntü: ${analysis?analysis.sig.length:0}</p>${$('freqTable').outerHTML}${analysis?matrixHTML('Z Skor Matrisi',analysis.z,'z'):''}<h2>Anlamlı Geçişler</h2><table border=1><tr><th>From</th><th>To</th><th>Freq</th><th>Prob</th><th>Z</th><th>Yule Q</th></tr>${(analysis?analysis.sig:[]).map(e=>`<tr><td>${e.from}</td><td>${e.to}</td><td>${e.freq}</td><td>${e.prob.toFixed(2)}</td><td>${e.z.toFixed(2)}</td><td>${e.q.toFixed(2)}</td></tr>`).join('')}</table></body></html>`;download('lsa_rapor.html',html,'text/html')}
+function loadDemo(){events=[];['TQ','SI','TG','SA','SP','SS','TQ','SI','TG','SC','SP','TQ','SI','TG','SA','OFF','TG','SA','SP','SS','SI','TG','SC','SP'].forEach((c,i)=>addEvent(c,i*8,null,'Demo veri'));runAnalysis()}
+init();
+</script>
+</body>
+</html>
