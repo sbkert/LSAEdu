@@ -1,1 +1,78 @@
+Davranışsal Gözlem Verileri İçin GSEQ ve SDIS Temelli Stratejik Analiz Planı
+
+1. Giriş: Davranışsal Mikroanaliz ve Senkronizasyonun Stratejik Önemi
+
+Davranış bilimlerinde metodolojik yaklaşım, genellikle "küresel değerlendirme" (global approach) ile "mikro-analitik yaklaşım" arasında bir seçim gerektirir. Küresel yaklaşım, davranışı geniş zaman dilimlerinde "var/yok" veya toplam sıklık üzerinden ölçeklendirirken; mikro-analitik yaklaşım, davranışların başlangıç ve bitiş anlarını saniyelik hassasiyetle kaydederek etkileşimin zamansal dokusunu inceler. Ebeveyn-çocuk senkronizasyonu (Ausherman, 2014) ve hibrit zeka (Nguyen ve ark., 2024) gibi alanlarda asıl sorun, bu yapıların teoride çok yaygın olmasına rağmen, davranış düzeyinde standart ve geçerli bir ölçümleme (operationalization) yönteminin eksikliğidir. Mikro-analitik veri toplama, değişkenler arasındaki karşılıklı ve döngüsel (recursive) etkileşimleri ortaya çıkarma kapasitesine sahiptir. Feldman’ın (2012) biyo-davranışsal senkronizasyon modelinde vurguladığı üzere, sosyal davranışlar aslında fizyolojik süreçlerin senkronize olmasını sağlayan temel mekanizmadır; bu nedenle etkileşimin anlık akışını analiz etmek, sadece bir teknik tercih değil, teorik modelleri doğrulamak için stratejik bir zorunluluktur.
+
+Bu metodolojik derinliğin temeli, verilerin sistematik bir şekilde kodlanmasıyla atılır; bu süreç bir sonraki bölümde ele alınmaktadır.
+
+2. Veri Toplama ve Kodlama Protokolleri: Mangold INTERACT Entegrasyonu
+
+Veri toplama aşamasında, etkileşimlerin video kaydı (laboratuvar ortamı veya dijital platformlar) birincil veri kaynağıdır. Kodlama süreci, saniye bazlı veya olay temelli "anlam birimleri" (unit of meaning) üzerinden yapılandırılır. Mangold INTERACT yazılımı, çoklu video desteği ve senkronize oynatma özellikleri sayesinde araştırmacıya yüksek hassasiyetli bir medya işleme avantajı sunar. Metodolojik titizliğin bir göstergesi olarak, gözlemciler arası güvenirlik (inter-rater reliability) analizlerinde Cohen’s Kappa değerinin 0.75 üzerinde (mükemmel seviye) olması hedeflenmelidir. Mangold/Bakeman prosedürleri çerçevesinde, verinin doğasına göre olay-temelli (event-based) veya zaman-temelli (time-based) Kappa algoritmaları seçilmelidir. INTERACT’tan gerçekleştirilen "Direct Data Export", kodlanmış verilerin manuel hata payı olmadan doğrudan SDIS formatına aktarılmasını sağlayarak iş akış verimliliğini maksimize eder.
+
+Kodlama Türü	Uygulama Alanı	Stratejik Çıktı
+Olay (Event)	Çevrimiçi Tartışma Grupları (Jeong)	Eleştirel düşünme olayları arasındaki geçiş olasılıkları.
+Durum (State)	Ebeveyn-Çocuk Etkileşimi (Ausherman)	Senkron ve asenkron segmentlerin süre ve frekans dağılımı.
+Zamanlanmış Olay (Timed-event)	AI Destekli Akademik Yazma (Nguyen)	Yazma stratejilerinin (SRL) zamansal akışı ve AI ile etkileşim süresi.
+
+Ham kodlanmış veriler toplandıktan sonra, analiz motorunun anlayabileceği standart dile dönüştürülmelidir.
+
+3. SDIS (Sequential Data Interchange Standard) Dil Yapısı ve Dönüşüm
+
+SDIS (Sequential Data Interchange Standard), sıralı gözlemsel verileri tanımlamak için kullanılan evrensel bir dildir. Gözlem yazılımlarından (INTERACT, The Observer vb.) elde edilen verilerin analiz edilebilmesi için SDIS derleyicisi aracılığıyla MDS (Modified SDS) dosyalarına dönüştürülmesi şarttır. Teknik bir uyarı olarak; GSEQ 5 sürümünde kullanılan MDS formatı önceki sürümlerle uyumlu değildir; bu nedenle eski SDS dosyalarının yeniden derlenmesi gerekmektedir. Veri kaynağına bağlı olarak kullanılan standalone yardımcı programlar dönüşümde kritik rol oynar: ActSds (INTERACT verileri için), ObsTxtSds (The Observer Sürüm 6 ve sonrası için) ve OdfSds (The Observer Sürüm 5 ve öncesi için).
+
+SDIS Dosya Yapısının Temel Bileşenleri:
+
+* Kod Tanımları: Analiz edilecek tüm davranış kodlarının ve etiketlerinin hiyerarşik tanımı.
+* Veri Tipi: Verinin olay (event), durum (state), zamanlanmış olay (timed-event) veya çoklu-olay (multievent) olup olmadığının belirtilmesi.
+* Oturum Verileri: Her bir gözlem seansına ait ham kod dizileri ve zaman damgalarının standart yazımı.
+
+Derlenen SDIS dosyaları, veriler üzerinde mantıksal manipülasyonlar yapılmasına olanak tanıyan GSEQ platformuna giriş sağlar.
+
+4. GSEQ Yapılandırması ve Veri Modifikasyon Prosedürleri
+
+GSEQ (Generalized Sequential Querier), sıralı verileri analiz etmek için kullanılan en güçlü araçtır. Yazılımın veri modifikasyon kapasitesi, ham veriyi stratejik bir yapıya kavuşturur. Özellikle "Lumping" (birleştirme) ve "Recoding" (yeniden kodlama) işlemleri, nadir görülen davranış kodlarını birleştirerek Jeong (2003) tarafından vurgulanan "küçük hücre frekansları" riskini ve Tip I hata olasılığını minimize eder.
+
+GSEQ Modifikasyon Araçları GSEQ, karmaşık etkileşim kalıplarını basitleştirmek için mantıksal operatörler (VE, VEYA, DEĞİL) sunar. Özellikle "Window" komutu, belirli bir davranışın başlangıcı (onset) veya bitişi (offset) etrafında zamansal pencereler tanımlayarak zaman-penceresi sıralı analizleri (time-window sequential analysis) yapılmasını sağlar. Bu, örneğin bir AI uyarısından sonraki 5 saniye içinde gerçekleşen kullanıcı tepkilerini izole etmek için stratejik bir öneme sahiptir.
+
+Veriler yapılandırıldıktan sonra, asıl istatistiksel çıkarımların yapılacağı analiz aşamasına geçilir.
+
+5. Gecikmeli Sıralı Analiz (Lag Sequential Analysis - LSA) ve İstatistiksel Göstergeler
+
+LSA metodolojisi, bir "verili" (given) davranıştan sonra bir "hedef" (target) davranışın gelme olasılığını ölçer. Lag 1 doğrudan ardışık eylemleri (örneğin: PROMPT \to RE_GAI) incelerken, Lag 2 analizi araya giren diğer eylemlere rağmen devam eden dolaylı etkileşim kalıplarını (örneğin: Ebeveyn Kolaylaştırma \to X \to İş Birliği) ortaya çıkarır. Analiz planında Nguyen ve ark. (2024) tarafından tanımlanan iki temel küme göz önünde bulundurulmalıdır: Küme 1 (Exploratory - Araştırmacı) ve Küme 2 (Efficiency-driven - Verimlilik Odaklı).
+
+İstatistiksel Çıktıların Değerlendirilmesi:
+
+* Transitional Probabilities (Geçiş Olasılıkları): Davranış dizisinin gerçekleşme olasılığı (0.00 - 1.00).
+* Adjusted Residuals & Z-Scores: Gözlenen frekansın beklenen frekanstan anlamlı farkı (z \geq \pm1.96 ise p < .05 düzeyinde anlamlıdır).
+* Yule’s Q: Etkileşimin gücünü belirleyen etki büyüklüğü (Q \geq 0.30 ise güçlü ilişki).
+
+Geçiş Matrisi Örneği (Sıralı Davranış Dinamikleri):
+
+Verili Davranış (Given)	Hedef Davranış (Target)	Lag (Gecikme)	Z-Skoru	Yule’s Q
+Parent Facilitation	Collaboration	Lag 1-2	> 1.96	> 0.30
+GenAI Prompt	Review GenAI Content	Lag 1	9.74	0.82
+Parent Suppress	Separate Attention	Lag 2	> 1.96	> 0.30
+
+GSEQ ile elde edilen bu sofistike bulgular, daha geniş çaplı analizler için diğer paket programlara aktarılmalıdır.
+
+6. Veri Dışa Aktarımı ve İleri Analiz Yazılımlarına Transfer (SPSS, R, Excel)
+
+GSEQ sonuçları, sekme ile ayrılmış (tab-delimited) metin dosyaları olarak dışa aktarılır. Bu süreç, GSEQ'den elde edilen verilerin SPSS veya R gibi platformlarda grup karşılaştırmaları (homogeneity tests) ve zaman içindeki durağanlık (stationarity) analizlerine tabi tutulmasını sağlar. Özellikle R'daki "LagSequential" paketi, hem parametrik hem de randomizasyon testlerini desteklemesi bakımından Ausherman’ın çalışmasındaki gibi küçük örneklemli (4 diyad) çalışmalar için hayati bir avantaj sunar.
+
+Veri Transferinde 3 Kritik Adım:
+
+1. Format Uyumluluğu: Çıktıların hedef yazılıma uygun yapılandırıldığından emin olunması.
+2. Veri Havuzlama (Pooling): Analizlerin seans bazlı mı yoksa tüm seansların birleştirilerek (pooled) mi aktarılacağının kararlaştırılması.
+3. İleri İstatistiksel Doğrulama: R entegrasyonu ile davranış kalıplarının gruplar arası tutarlılığının (homojenlik) test edilmesi.
+
+7. Sonuç: Metodolojik Entegrasyon ve Gelecek Projeksiyonu
+
+Bu uygulama planı, davranış bilimlerinde teorik olarak var olan ancak ölçümü zor olan "Hibrit Zeka" (Human-AI Shared Regulation - HASRL) ve "Biyo-davranışsal Senkronizasyon" modellerini standardize bir metodolojiye oturtmaktadır. "So what?" (Öyleyse ne?) sorusuna verilecek yanıt nettir: Bu metodoloji, etkileşimin gizli zamansal yapısını görünür kılarak, sadece davranışın sıklığını değil, tarafların birbirine olan "zamanındaki" tepkilerini kanıta dayalı olarak doğrular.
+
+Araştırmacılar İçin 3 Anahtar Başarı Faktörü
+
+1. Metodolojik Titizlik: Gözlemciler arası güvenirliğin (Cohen’s Kappa) mükemmel seviyede (> 0.75) tutulması.
+2. Analitik Eşikler: Anlamlılık testlerinde z \geq \pm1.96 ve etki büyüklüğünde Q \geq 0.30 kriterlerine sadık kalınması.
+3. Dinamik Yaklaşım: Sabit frekanslar yerine, davranışların birbirini nasıl tetiklediğine (geçiş olasılıkları) odaklanarak etkileşimin gerçek doğasının yansıtılması.
 
